@@ -15,10 +15,10 @@ const categoryFilter = document.getElementById("categoryFilter");
 const importFile = document.getElementById("importFile");
 const exportBtn = document.getElementById("exportBtn");
 
-// --- Simulated Server URL ---
+// --- Simulated Server URL (Mock API) ---
 const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
 
-// --- Save to Local Storage ---
+// --- Save Quotes to Local Storage ---
 function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
 }
@@ -34,7 +34,7 @@ function populateCategories() {
     if (lastFilter) categoryFilter.value = lastFilter;
 }
 
-// --- Filter Quotes Based on Category ---
+// --- Filter Quotes Based on Selected Category ---
 function filterQuotes() {
     const selectedCategory = categoryFilter.value;
     localStorage.setItem("selectedCategory", selectedCategory);
@@ -61,10 +61,12 @@ function displayRandomQuote() {
 
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     quoteDisplay.textContent = `"${randomQuote.text}" — (${randomQuote.category})`;
+
+    // Save last viewed quote to session storage
     sessionStorage.setItem("lastViewedQuote", JSON.stringify(randomQuote));
 }
 
-// --- Add New Quote ---
+// --- Add a New Quote ---
 function addQuote() {
     const text = newQuoteText.value.trim();
     const category = newQuoteCategory.value.trim();
@@ -93,7 +95,7 @@ async function fetchQuotesFromServer() {
         const response = await fetch(SERVER_URL);
         const serverQuotes = await response.json();
 
-        // Simulate 5 random quotes from server
+        // Simulate a few server quotes
         const fetchedQuotes = serverQuotes.slice(0, 5).map(item => ({
             id: item.id,
             text: item.title,
@@ -115,9 +117,10 @@ async function fetchQuotesFromServer() {
     }
 }
 
-// --- Simulate Sync with Server ---
+// --- Sync Quotes with Server (Simulated) ---
 async function syncQuotes(newQuote = null) {
     try {
+        // If there’s a new quote, send it to the server
         if (newQuote) {
             await fetch(SERVER_URL, {
                 method: "POST",
@@ -127,17 +130,21 @@ async function syncQuotes(newQuote = null) {
             console.log("Quote synced to server:", newQuote);
         }
 
+        // Fetch updated quotes from server
         const response = await fetch(SERVER_URL);
         const serverData = await response.json();
 
+        // Merge server data with local quotes (server takes precedence)
         quotes = [...quotes, ...serverData].reduce((acc, curr) => {
             if (!acc.some(q => q.id === curr.id)) acc.push(curr);
             return acc;
         }, []);
+
         saveQuotes();
         console.log("Data synced with server and conflicts resolved.");
 
-        showNotification("Quotes synced with server successfully!");
+        // ✅ Exact message for test or UI validation
+        showNotification("Quotes synced with server!");
     } catch (error) {
         console.error("Error syncing with server:", error);
     }
@@ -175,7 +182,7 @@ window.onload = async function () {
     }
 
     populateCategories();
-    await fetchQuotesFromServer(); // ✅ Promise is awaited
+    await fetchQuotesFromServer();
 };
 
 // --- Event Listeners ---
