@@ -84,7 +84,7 @@ function addQuote() {
     newQuoteCategory.value = "";
     newQuoteText.focus();
 
-    syncWithServer(newQuote);
+    syncQuotes(newQuote);
 }
 
 // --- Fetch Quotes from Server ---
@@ -116,7 +116,7 @@ async function fetchQuotesFromServer() {
 }
 
 // --- Simulate Sync with Server ---
-async function syncWithServer(newQuote = null) {
+async function syncQuotes(newQuote = null) {
     try {
         if (newQuote) {
             await fetch(SERVER_URL, {
@@ -161,7 +161,7 @@ function showNotification(message) {
 }
 
 // --- Periodic Sync Every 20 Seconds ---
-setInterval(syncWithServer, 20000);
+setInterval(syncQuotes, 20000);
 
 // --- Initialize App ---
 window.onload = async function () {
@@ -175,7 +175,7 @@ window.onload = async function () {
     }
 
     populateCategories();
-    await fetchQuotesFromServer(); // ✅ fixed: waits for promise to resolve
+    await fetchQuotesFromServer(); // ✅ Promise is awaited
 };
 
 // --- Event Listeners ---
