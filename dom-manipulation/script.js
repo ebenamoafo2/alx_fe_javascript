@@ -13,7 +13,7 @@ const newQuoteText = document.getElementById("newQuoteText");
 const newQuoteCategory = document.getElementById("newQuoteCategory");
 
 // Function to show a random quote
-function showRandomQuote() {
+function displayRandomQuote() {
     if (quotes.length === 0) {
         quoteDisplay.textContent = "No quotes available yet!";
         return;
@@ -56,5 +56,5 @@ window.onload = function() {
 };
 
 // Event listeners
-newQuoteBtn.addEventListener("click", showRandomQuote);
+newQuoteBtn.addEventListener("click", displayRandomQuote);
 addQuoteBtn.addEventListener("click", addQuote);
