@@ -52,7 +52,7 @@ window.onload = function() {
     if (storedQuotes) {
         quotes = JSON.parse(storedQuotes);
     }
-    showRandomQuote();
+    displayRandomQuote();
 };
 
 // Event listeners
